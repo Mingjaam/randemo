@@ -4,9 +4,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const memoContainer = document.getElementById('memoContainer');
     let memoCount = 0;
     const MAX_MEMOS = 10;
+    let isDragging = false;
+    let currentMemo = null;
+    let offsetX, offsetY;
 
     addButton.addEventListener('click', createNewMemo);
     shuffleButton.addEventListener('click', shuffleMemos);
+
+    // 드래그 관련 이벤트 리스너
+    document.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', endDrag);
+
+    function startDrag(e) {
+        if (e.target.closest('.memo') && !e.target.classList.contains('delete-button')) {
+            const memo = e.target.closest('.memo');
+            if (memo.classList.contains('flipped')) return;
+
+            isDragging = true;
+            currentMemo = memo;
+            
+            const rect = memo.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            
+            memo.style.cursor = 'grabbing';
+            memo.style.zIndex = '1000';
+        }
+    }
+
+    function drag(e) {
+        if (!isDragging || !currentMemo) return;
+        
+        e.preventDefault();
+        
+        const x = e.clientX - offsetX;
+        const y = e.clientY - offsetY;
+        
+        currentMemo.style.left = `${x}px`;
+        currentMemo.style.top = `${y}px`;
+        currentMemo.style.transform = currentMemo.style.transform.replace(/translate\([^)]*\)/, '');
+    }
+
+    function endDrag() {
+        if (isDragging && currentMemo) {
+            currentMemo.style.cursor = 'grab';
+            currentMemo.style.zIndex = '1';
+            isDragging = false;
+            currentMemo = null;
+        }
+    }
 
     function createNewMemo() {
         if (memoCount >= MAX_MEMOS) {
@@ -19,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         memo.style.left = '50%';
         memo.style.top = '50%';
         memo.style.transform = 'translate(-50%, -50%)';
+        memo.style.cursor = 'grab';
 
         const memoFront = document.createElement('div');
         memoFront.className = 'memo-front';
@@ -31,6 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
         completeButton.textContent = '완료';
         completeButton.addEventListener('click', () => completeMemo(memo));
 
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.textContent = '×';
+        deleteButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            memo.remove();
+            memoCount--;
+        });
+
         const memoBack = document.createElement('div');
         memoBack.className = 'memo-back';
 
@@ -39,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         memoFront.appendChild(textarea);
         memoFront.appendChild(completeButton);
+        memoFront.appendChild(deleteButton);
         memo.appendChild(memoFront);
         memo.appendChild(memoBack);
         memo.appendChild(memoCover);
@@ -68,10 +126,22 @@ document.addEventListener('DOMContentLoaded', () => {
         memo.querySelector('.complete-button').remove();
 
         // 클릭 이벤트 추가
-        memo.addEventListener('click', () => {
+        memo.addEventListener('click', (e) => {
+            // 삭제 버튼 클릭 시에는 수정하지 않음
+            if (e.target.classList.contains('delete-button')) {
+                return;
+            }
+
             if (!memo.classList.contains('flipped')) {
-                memo.classList.add('flipped');
+                // 메모지가 앞면일 때
+                if (textarea.readOnly) {
+                    textarea.readOnly = false;
+                    textarea.focus();
+                } else {
+                    textarea.readOnly = true;
+                }
             } else {
+                // 메모지가 뒷면일 때
                 memo.classList.remove('flipped');
             }
         });
