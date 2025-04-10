@@ -73,6 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const textarea = document.createElement('textarea');
         textarea.placeholder = '메모를 입력하세요...';
+        textarea.rows = 5;
+        textarea.maxLength = 200;
 
         const completeButton = document.createElement('button');
         completeButton.className = 'complete-button';

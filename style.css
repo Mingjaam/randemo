@@ -6,11 +6,30 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
+    background-color: #D2B48C;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+    background-size: 20px 20px;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(210, 180, 140, 0.6), rgba(210, 180, 140, 0.4));
+    z-index: -1;
 }
 
 .container {
@@ -18,6 +37,8 @@ body {
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2) inset;
 }
 
 .add-button, .shuffle-button {
@@ -57,12 +78,15 @@ body {
 
 .memo textarea {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 40px);
     border: none;
     resize: none;
     outline: none;
     font-size: 16px;
     background: transparent;
+    line-height: 1.5;
+    max-height: 120px; /* 5줄 정도의 높이 */
+    overflow-y: auto;
 }
 
 .memo .complete-button {
