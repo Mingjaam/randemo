@@ -1,3 +1,12 @@
+//고칠 점 to do 
+// 모바일 드래그 (작동안함)
+// 모바일 크기 줄이기
+// 최대 개수 조절 적절히
+// 랜덤위치 화면 안넘어가게
+// 버튼 크기들 조정
+// 엔터 누르면 완료 누른 판정
+// 작성 바깥화면 누르면 완료 누른 판정
+
 document.addEventListener('DOMContentLoaded', () => {
     const addButton = document.getElementById('addMemo');
     const shuffleButton = document.getElementById('shuffleButton');
