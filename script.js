@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const shuffleButton = document.getElementById('shuffleButton');
     const memoContainer = document.getElementById('memoContainer');
     let memoCount = 0;
-    const MAX_MEMOS = 10;
+    const MAX_MEMOS = 15;
     let isDragging = false;
     let currentMemo = null;
     let offsetX, offsetY;
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createNewMemo() {
         if (memoCount >= MAX_MEMOS) {
-            alert('최대 10개의 메모지만 생성할 수 있습니다.');
+            alert('최대 15개의 메모지만 생성할 수 있습니다.');
             return;
         }
 
